@@ -109,6 +109,32 @@ growi-blume-sitegen/
 └── .gitignore
 ```
 
+## 既知の課題とトラブルシューティング
+
+### ページタイトルの重複（修正済み）
+
+- **原因**: Blume が MDX の最初の `# Heading` をページタイトルとして自動生成するが、content 内の `# Heading` もそのままレンダリングされるため、`<h1>` が2重に出力されていた
+- **修正**: 全ページから `# Heading` を削除し、代わりに `title` フロントマターを追加。Blume 公式ドキュメントと同様のパターンに統一
+  - フロントマター: `---\ntitle: ページタイトル\n---`
+  - Content は `## Section Heading`（h2）から開始
+- **GROWI への影響なし**: `stripMdxSyntax` がフロントマターを自動除去する
+
+### GitHub Actions: Node.js 20 非推奨（修正済み）
+
+- **原因**: 2026年6月2日以降、GitHub Actions が Node.js 20 actions を強制的に Node.js 24 で実行。旧バージョン（`@v4`）が正常動作しなかった
+- **修正**: 以下の action を最新に更新
+  | Action | 旧 | 新 |
+  |--------|-----|-----|
+  | `checkout` | `@v4` | `@v7` |
+  | `setup-node` | `@v4` | `@v7` |
+  | `configure-pages` | `@v4` | `@v6` |
+  | `upload-pages-artifact` | `@v3` | `@v5` |
+  | `deploy-pages` | `@v4` | `@v5` |
+
+### `npx blume build` → `npm exec blume build`
+
+- CI 環境で `npx` がハングする可能性があるため `npm exec` に変更（`src/build-site.ts`）
+
 ## 未確定・将来検討
 
 - （なし。28回のQ&A + GitHub Pages 検討で全決定済み）
