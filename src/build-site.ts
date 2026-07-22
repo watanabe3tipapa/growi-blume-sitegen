@@ -21,6 +21,6 @@ export const buildSite = async (configPath?: string): Promise<void> => {
   console.log(`[build] Linked ${relPath} → public/assets`);
 
   console.log("[build] Running blume build...");
-  execSync("npx blume build", { stdio: "inherit" });
+  execSync("npm exec blume build", { stdio: "inherit" });
   console.log("[build] Site built successfully → dist/");
 };
