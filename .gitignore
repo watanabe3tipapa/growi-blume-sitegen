@@ -1,0 +1,7 @@
+node_modules/
+dist/
+.blume/
+content/.generated/
+public/assets/
+*.log
+.DS_Store

@@ -1,0 +1,8 @@
+contentDir: content
+pagesDir: content/pages
+assetsDir: content/assets
+
+growi:
+  baseUrl: https://your-growi-instance.example.com
+  apiToken: YOUR_API_TOKEN
+  parentPagePath: /MyDocs

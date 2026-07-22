@@ -1,0 +1,37 @@
+{
+  "name": "growi-blume-sitegen",
+  "version": "0.1.0",
+  "description": "Blume × GROWI ハイブリッドサイトジェネレーター",
+  "type": "module",
+  "bin": {
+    "growi-blume-sitegen": "./src/index.ts"
+  },
+  "files": [
+    "src/**/*",
+    "scripts/**/*"
+  ],
+  "scripts": {
+    "build": "tsx src/index.ts build",
+    "upload": "tsx src/index.ts upload",
+    "release": "tsx src/index.ts release",
+    "upload:dry-run": "tsx scripts/upload-growi.ts --dry-run",
+    "dev": "blume dev",
+    "preview": "blume preview"
+  },
+  "dependencies": {
+    "blume": "^1.0.3",
+    "commander": "^14.0.1",
+    "glob": "^11.0.3",
+    "yaml": "^2.7.1"
+  },
+  "devDependencies": {
+    "@types/node": "^24.7.2",
+    "tsx": "^4.20.6",
+    "typescript": "^5.9.3"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/watanabe3tipapa/growi-blume-sitegen.git"
+  },
+  "license": "MIT"
+}

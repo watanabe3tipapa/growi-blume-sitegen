@@ -1,0 +1,40 @@
+# growi-blume-sitegen とは
+
+## 背景
+
+Markdown でドキュメントを書く際、「GitHub Pages などで公開するサイト」と「社内 GROWI Wiki」の両方に同じ内容を展開したい場面があります。従来はそれぞれ別々に管理する必要があり、二重管理やリンク切れの原因になっていました。
+
+## 解決する課題
+
+`growi-blume-sitegen` は以下の2つのツールをハイブリッドします。
+
+| ツール | 役割 |
+|--------|------|
+| [Blume](https://useblume.dev) | Markdown/MDX から高速な静的サイトを生成。検索・ナビゲーション・テーマ等の UX を内蔵 |
+| [growi-uploader](https://github.com/onozaty/growi-uploader) | ローカルの Markdown + 添付ファイルを GROWI に一括アップロード。自動リンク置換に対応 |
+
+この2つを組み合わせることで、「1つのソース」から「2つの出力先」へ展開できるようになります。
+
+## アーキテクチャ
+
+```
+content/pages/*.mdx
+        │
+        ├──→ Blume build ──→ dist/ ──→ GitHub Pages
+        │
+        └──→ MDX→MD 変換
+             → リンク置換
+             → growi-uploader ──→ GROWI
+```
+
+- 編集するのは `content/pages/` 配下の MDX のみ
+- サイト用のパスと GROWI 用のパスは変換レイヤで自動的に振り分け
+- 添付ファイル（画像/PDF）も `content/assets/` の単一管理
+
+## コンポーネント
+
+| コンポーネント | 説明 |
+|--------------|------|
+| `build` | Blume を実行し静的サイトを生成。`public/assets/` と `content/assets/` を同期 |
+| `upload` | MDX を GROWI 向け Markdown に変換し、growi-uploader を CLI 呼び出し |
+| `release` | build → upload を直列実行。1コマンドで両方に反映 |

@@ -1,0 +1,73 @@
+# クイックスタート
+
+## 前提
+
+- Node.js 22.12 以降
+- GROWI インスタンス（API トークンを発行済み）
+- GitHub リポジトリ（GitHub Pages デプロイ用）
+
+## インストール
+
+```bash
+npm install growi-blume-sitegen
+```
+
+## 設定ファイルを作成
+
+プロジェクトルートに `growi-blume-sitegen.config.yml` を作成します。
+
+```yaml
+contentDir: content
+pagesDir: content/pages
+assetsDir: content/assets
+
+growi:
+  baseUrl: https://your-growi-instance.example.com
+  apiToken: YOUR_API_TOKEN
+  parentPagePath: /MyDocs
+```
+
+## コンテンツを追加
+
+`content/pages/` 配下に MDX ファイルを配置します。
+
+```markdown
+---
+title: Hello World
+---
+
+# Hello World
+
+これはサンプルページです。
+
+![サンプル画像](/assets/sample.png)
+```
+
+## ビルド（サイト生成）
+
+```bash
+npx growi-blume-sitegen build
+```
+
+`dist/` に静的サイトが出力されます。GitHub Pages にデプロイするには、`.github/workflows/deploy.yml` を設定して `main` ブランチにプッシュしてください。
+
+## アップロード（GROWI）
+
+```bash
+npx growi-blume-sitegen upload
+```
+
+`content/pages/` の全 MDX が GROWI の `/<parentPagePath>/...` 配下に一括投稿されます。
+
+## リリース（両方同時）
+
+```bash
+npx growi-blume-sitegen release
+```
+
+## 次のステップ
+
+- [設定ファイルリファレンス](/docs/configuration) — 全設定項目の解説
+- [CLI コマンド詳細](/docs/commands) — 各コマンドのオプション
+- [ハイブリッドワークフロー](/docs/features/hybrid-workflow) — 単一ソース管理のベストプラクティス
+- [growi-uploader 連携](/docs/features/growi-uploader) — 添付ファイルの自動検出とリンク置換の仕組み

@@ -1,0 +1,25 @@
+# growi-blume-sitegen
+
+Blume で美しい静的サイトを生成し、同じ Markdown ソースから GROWI へページ一括投稿できるハイブリッドツール。
+
+## 特長
+
+- **単一ソース**: `content/pages/` の MDX を編集するだけで、サイトと GROWI の両方が更新される
+- **サイト生成**: Blume が `content/pages/` を読み取り、高速な静的サイトを `dist/` に出力。GitHub Pages へのデプロイに対応
+- **GROWI 一括投稿**: 同じ MDX を `growi-uploader` 経由で GROWI に全ページ一括アップロード。添付ファイルの自動検出・リンク置換も行う
+- **リンク変換自動化**: ローカル相対パスの参照を、サイトではそのまま、GROWI では GROWI ページパス表現に自動変換
+
+## 始め方
+
+```bash
+# インストール & 設定ファイル作成後
+npx growi-blume-sitegen release
+```
+
+詳細は [クイックスタート](/docs/quickstart) を参照。
+
+## ユースケース
+
+- 技術文書を GitHub Pages で公開しつつ、社内 GROWI でも同じ内容を共有したい
+- Markdown ベースのカタログ・ナレッジを複数チャネルで配信したい
+- 添付ファイルを含むドキュメントを一貫して管理したい

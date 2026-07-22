@@ -1,0 +1,62 @@
+# 設定ファイル
+
+## growi-blume-sitegen.config.yml
+
+プロジェクトルートに配置する YAML 形式の設定ファイルです。
+
+### 設定項目
+
+```yaml
+# コンテンツディレクトリ（デフォルト値）
+contentDir: content
+pagesDir: content/pages
+assetsDir: content/assets
+
+# GROWI 接続設定
+growi:
+  baseUrl: https://your-growi-instance.example.com
+  apiToken: YOUR_API_TOKEN
+  parentPagePath: /MyDocs
+```
+
+| 項目 | 必須 | デフォルト | 説明 |
+|------|------|-----------|------|
+| `contentDir` | 任意 | `content` | コンテンツのルートディレクトリ |
+| `pagesDir` | 任意 | `content/pages` | MDX ページのディレクトリ |
+| `assetsDir` | 任意 | `content/assets` | 添付ファイルのディレクトリ |
+| `growi.baseUrl` | 必須 | — | GROWI インスタンスのルート URL |
+| `growi.apiToken` | 必須 | — | GROWI API アクセストークン |
+| `growi.parentPagePath` | 任意 | `/` | GROWI 上の親ページパス |
+
+## blume.config.ts
+
+Blume の設定ファイルです。`content.root` は `content/pages` を指定します。
+
+```typescript
+import { defineConfig } from "blume";
+
+export default defineConfig({
+  title: "growi-blume-sitegen",
+  description: "Blume × GROWI ハイブリッドサイトジェネレーター",
+  content: {
+    root: "content/pages",
+  },
+  deployment: {
+    site: "https://<username>.github.io",
+    base: "/<repo-name>",
+  },
+});
+```
+
+### Blume の主な設定項目
+
+| 項目 | 説明 |
+|------|------|
+| `title` | サイトのタイトル（ヘッダー・OG カードに表示） |
+| `description` | メタ description |
+| `content.root` | MDX ファイルのルートディレクトリ（`content/pages` 固定） |
+| `deployment.site` | デプロイ先のサイト URL（GitHub Pages の URL） |
+| `deployment.base` | サイトのベースパス（通常はリポジトリ名） |
+| `theme` | アクセントカラー・フォント・ダークモード設定 |
+
+詳細は [Blume 公式ドキュメント](https://useblume.dev/docs/configuration) を参照してください。

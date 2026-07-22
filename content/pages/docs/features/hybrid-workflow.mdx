@@ -1,0 +1,61 @@
+# ハイブリッドワークフロー
+
+## 単一ソースの原則
+
+`growi-blume-sitegen` の核心は「書くのは1回、公開先は2つ」です。
+
+```
+content/pages/docs/intro.mdx
+  → GitHub Pages: https://<user>.github.io/<repo>/docs/intro
+  → GROWI:       https://<growi>/MyDocs/docs/intro
+```
+
+## リンク変換の仕組み
+
+### ページリンク
+
+MDX 内では拡張子なしの相対パスでページを参照します。
+
+```markdown
+[概要](/docs/introduction)
+[クイックスタート](/docs/quickstart)
+```
+
+- **サイト**: Blume がそのままのパスで解決
+- **GROWI**: `/<parentPagePath>/docs/introduction` に自動変換
+
+### アセット参照
+
+画像やファイルは `/assets/...` の絶対パス形式で参照します。
+
+```markdown
+![図](/assets/images/diagram.png)
+[PDF](/assets/files/manual.pdf)
+```
+
+- **サイト**: `public/assets/` → `content/assets/` に同期され、`/assets/...` で参照可能
+- **GROWI**: ファイル名を `<page>_attachment_<file>` 形式にリネームして配置。growi-uploader が自動検出し `/attachment/{id}` に置換
+
+## 設定の統一
+
+フロントマターで両方に共通するメタデータを管理します。
+
+```markdown
+---
+title: インストールガイド
+tags: [setup, guide]
+publishedAt: 2026-07-22
+---
+```
+
+- `title` / `tags`: サイトの検索・一覧表示と GROWI の両方で使用
+- `publishedAt`: サイトのソートに使用（GROWI では無視）
+
+## 運用フロー
+
+```
+1. content/pages/ に MDX を追加・編集
+2. content/assets/ に画像などを配置
+3. npm run release     # build + upload を実行
+4. git push main       # GitHub Pages に自動デプロイ
+```

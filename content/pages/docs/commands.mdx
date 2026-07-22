@@ -1,0 +1,83 @@
+# CLI コマンド
+
+## 概要
+
+`growi-blume-sitegen` は3つのサブコマンドを提供します。
+
+```
+growi-blume-sitegen <command> [options]
+```
+
+## グローバルオプション
+
+| オプション | 説明 |
+|-----------|------|
+| `-V, --version` | バージョン情報を表示 |
+| `-h, --help` | ヘルプを表示 |
+| `-c, --config <path>` | 設定ファイルのパス（デフォルト: `growi-blume-sitegen.config.yml`） |
+
+## build
+
+Blume で静的サイトを生成します。
+
+```bash
+growi-blume-sitegen build [options]
+```
+
+処理フロー:
+
+1. `content/assets/` を `public/assets/` に同期
+2. `blume build` を実行し `dist/` に出力
+3. GitHub Pages にデプロイ可能な静的ファイルが生成される
+
+## upload
+
+MDX を GROWI 向け Markdown に変換し、growi-uploader 経由で GROWI に一括投稿します。
+
+```bash
+growi-blume-sitegen upload [options]
+```
+
+処理フロー:
+
+1. `content/pages/**/*.mdx` を列挙
+2. ページ辞書・アセット辞書を作成
+3. 各 MDX を:
+   - Markdown に正規化
+   - ページリンクを GROWI パスに置換
+   - アセット参照を命名規約パスに変換
+4. 変換結果を `content/.generated/growi/` に出力
+5. アセットファイルを同ディレクトリにリネームコピー
+6. `growi-uploader` CLI を呼び出し一括アップロード
+
+## release
+
+build → upload を直列実行します。
+
+```bash
+growi-blume-sitegen release [options]
+```
+
+1コマンドでサイト生成と GROWI 投稿の両方を完了します。
+
+## npm scripts での利用例
+
+`package.json` の `scripts` に登録して利用することを推奨します。
+
+```json
+{
+  "scripts": {
+    "build": "growi-blume-sitegen build",
+    "upload": "growi-blume-sitegen upload",
+    "release": "growi-blume-sitegen release",
+    "dev": "blume dev"
+  }
+}
+```
+
+## 終了コード
+
+| コード | 意味 |
+|--------|------|
+| `0` | 成功 |
+| `1` | 設定エラーまたは実行時エラー |

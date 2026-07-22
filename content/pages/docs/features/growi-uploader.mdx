@@ -1,0 +1,81 @@
+# growi-uploader 連携
+
+`growi-blume-sitegen` は GROWI へのアップロードエンジンとして [growi-uploader](https://github.com/onozaty/growi-uploader) を内部で利用しています。
+
+## growi-uploader とは
+
+ローカルの Markdown ファイルと添付ファイルを GROWI に一括アップロードする CLI ツールです。
+
+## growi-uploader の主なメリット
+
+### 1. ディレクトリ構造をそのまま GROWI のページ階層に変換
+
+ローカルのフォルダ構成がそのまま GROWI のページツリーになります。
+
+```
+docs/guide.md          → /MyDocs/docs/guide
+docs/api/overview.md   → /MyDocs/docs/api/overview
+```
+
+### 2. 添付ファイルの自動検出（2方式）
+
+**命名規約方式**: `<ページ名>_attachment_<ファイル名>` のパターンで自動検出。
+
+```
+guide.md                       → /MyDocs/docs/guide
+guide_attachment_diagram.png   → /guide に自動添付
+```
+
+**リンクベース方式**: Markdown 内の画像・ファイルリンクから自動検出。
+
+```markdown
+![ロゴ](./images/logo.png)
+```
+
+上記リンクのあるファイル（`images/logo.png`）が自動的に添付ファイルとして検出・アップロードされます。
+
+### 3. 自動リンク置換
+
+アップロード後、添付ファイルへのリンクは自動的に `/attachment/{id}` 形式に置換されます。
+
+```markdown
+# アップロード前
+![図](guide_attachment_diagram.png)
+
+# GROWI 上
+![図](/attachment/68f3a41c794f665ad2c0d322)
+```
+
+### 4. ページリンクの自動補正
+
+`.md` 拡張子付きのページリンクから自動的に拡張子を除去します。
+
+```markdown
+# アップロード前
+[ガイド](./guide.md)
+
+# GROWI 上
+[ガイド](./guide)
+```
+
+## growi-blume-sitegen での連携フロー
+
+```
+1. MDX を Markdown に変換（MDX 構文を除去）
+2. ページリンクを GROWI パス表現に置換
+3. アセット参照を命名規約に沿ったパスに変換
+4. 変換済みファイルを .generated/growi/ に出力
+5. growi-uploader を CLI 呼び出し（一時設定ファイル付き）
+6. growi-uploader がページ作成・添付アップロード・リンク置換を実行
+```
+
+## growi-uploader の設定項目
+
+| 項目 | 説明 | growi-blume-sitegen での扱い |
+|------|------|---------------------------|
+| `url` | GROWI インスタンスの URL | `config.yml` の `growi.baseUrl` |
+| `token` | API アクセストークン | `config.yml` の `growi.apiToken` |
+| `basePath` | ページのベースパス | `config.yml` の `growi.parentPagePath` |
+| `update` | 既存ページの更新有無 | 常に `true`（上書き更新） |
+
+これらの設定は `growi-blume-sitegen.config.yml` に記述し、ツールが自動的に growi-uploader 用の設定ファイルを生成して渡します。
